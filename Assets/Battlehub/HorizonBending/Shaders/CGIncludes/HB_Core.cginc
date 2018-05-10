@@ -12,7 +12,7 @@ uniform float _HorizonZOffset;
 uniform float _Flatten;
 uniform float4 _HBWorldSpaceCameraPos;
 
-#define _HB_XZ_YUP 1
+#define _HB_YZ_XUP 1
 
 float4 HorizonBendXY_ZUP(float4 posWorld)
 {
