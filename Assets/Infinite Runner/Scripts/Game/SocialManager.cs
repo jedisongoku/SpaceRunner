@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
-using UnityEngine.SocialPlatforms.GameCenter;
+//using UnityEngine.SocialPlatforms.GameCenter;
 
 namespace InfiniteRunner.Game
 {
@@ -128,7 +128,7 @@ namespace InfiniteRunner.Game
         {
             if (success) {
 #if !UNITY_EDITOR
-			    GameCenterPlatform.ShowDefaultAchievementCompletionBanner(true);
+			    //GameCenterPlatform.ShowDefaultAchievementCompletionBanner(true);
 #endif
             }
 
