@@ -192,10 +192,7 @@ namespace InfiniteRunner.Player
 
         public void ResetValues(bool fromRevive)
         {
-            Debug.Log("1 - " + capsuleCollider.height);
-            //StopSlide(true);
-            ResetColliderValues();
-            Debug.Log("2 - " + capsuleCollider.height);
+            StopSlide(true);
             slideData.duration = 0;
             stumbleData.duration = 0;
 
@@ -213,6 +210,7 @@ namespace InfiniteRunner.Player
             pauseCollisionParticlePlaying = false;
             turnTime = -simultaneousTurnPreventionTime;
             jumpLandTime = Time.time;
+
             platformObject = null;
             curveTime = -1;
             curveMoveDistance = 0;
@@ -254,7 +252,7 @@ namespace InfiniteRunner.Player
             float hitDistance = 0;
             RaycastHit hit;
             // cast a ray to see if we are over any platforms
-            if (Physics.Raycast(thisTransform.position + capsuleCollider.center, -thisTransform.up, out hit, Mathf.Infinity, platformLayer)) {
+            if (Physics.Raycast(thisTransform.position + capsuleCollider.center, -thisTransform.up, out hit, Mathf.Infinity, platformLayer | floorLayer)) {
                 hitDistance = hit.distance;
                 PlatformObject platform = null;
                 if (!hit.transform.Equals(prevHitTransform)) {
@@ -563,9 +561,14 @@ namespace InfiniteRunner.Player
             thisTransform.forward = forward;
             targetRotation = thisTransform.rotation;
             turnOffset = prevTurnOffset;
+            curveOffset = Vector3.zero;
+            ChangeSlots(SlotPosition.Center);
 
             UpdateTargetPosition(targetRotation.eulerAngles.y);
-            thisTransform.position.Set(targetPosition.x, thisTransform.position.y, targetPosition.z);
+            var position = thisTransform.position;
+            position.x = targetPosition.x;
+            position.z = targetPosition.z;
+            thisTransform.position = position;
         }
 
         private Vector3 GetCurvePoint(float distance, bool updateMapIndex)
@@ -659,24 +662,21 @@ namespace InfiniteRunner.Player
 
         private void StopSlide(bool force)
         {
-            if (force && gameManager.IsGameActive())
-                playerAnimation.Run();
+            // adjust the collider bounds
+            if (isSliding) {
+                float height = capsuleCollider.height;
+                height *= 2;
+                capsuleCollider.height = height;
+                Vector3 center = capsuleCollider.center;
+                center.y = capsuleCollider.height / 2;
+                capsuleCollider.center = center;
+
+                if (force) {
+                    playerAnimation.Run();
+                }
+            }
 
             isSliding = false;
-
-            // adjust the collider bounds
-            float height = capsuleCollider.height;
-            height *= 2;
-            capsuleCollider.height = height;
-            Vector3 center = capsuleCollider.center;
-            center.y = capsuleCollider.height / 2;
-            capsuleCollider.center = center;
-        }
-
-        private void ResetColliderValues()
-        {
-            capsuleCollider.height = 2;
-            capsuleCollider.center =new Vector3(0, 1, 0);
         }
 
         public bool WithinReviveGracePeriod()

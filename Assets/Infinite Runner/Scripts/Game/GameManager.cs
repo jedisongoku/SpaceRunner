@@ -237,7 +237,7 @@ namespace InfiniteRunner.Game
             yield return new WaitForSeconds(1.0f);
 
             // Show the revive panel if respawns are enabled
-            if (allowRevives && dataManager.CanRevive() && dataManager.CanPurchaseRevive()) {
+            if ((allowRevives && dataManager.CanRevive() && dataManager.CanPurchaseRevive())) {
                 guiManager.ShowGUI(GUIState.Revive);
             } else {
                 guiManager.ShowGUI(GUIState.EndGame);
@@ -398,13 +398,7 @@ namespace InfiniteRunner.Game
         {
 #if !UNITY_EDITOR
             if (gameActive) {
-                if (!focus && gamePaused) {
-                    resumePaused = true;
-                }
-                PauseGame(!focus || resumePaused);
-                if (focus) {
-                    resumePaused = false;
-                }
+                PauseGame(!focus);
             }
 #endif
         }
