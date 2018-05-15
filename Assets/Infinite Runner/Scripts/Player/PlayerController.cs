@@ -192,7 +192,10 @@ namespace InfiniteRunner.Player
 
         public void ResetValues(bool fromRevive)
         {
-            StopSlide(true);
+            Debug.Log("1 - " + capsuleCollider.height);
+            //StopSlide(true);
+            ResetColliderValues();
+            Debug.Log("2 - " + capsuleCollider.height);
             slideData.duration = 0;
             stumbleData.duration = 0;
 
@@ -210,7 +213,6 @@ namespace InfiniteRunner.Player
             pauseCollisionParticlePlaying = false;
             turnTime = -simultaneousTurnPreventionTime;
             jumpLandTime = Time.time;
-
             platformObject = null;
             curveTime = -1;
             curveMoveDistance = 0;
@@ -669,6 +671,12 @@ namespace InfiniteRunner.Player
             Vector3 center = capsuleCollider.center;
             center.y = capsuleCollider.height / 2;
             capsuleCollider.center = center;
+        }
+
+        private void ResetColliderValues()
+        {
+            capsuleCollider.height = 2;
+            capsuleCollider.center =new Vector3(0, 1, 0);
         }
 
         public bool WithinReviveGracePeriod()
